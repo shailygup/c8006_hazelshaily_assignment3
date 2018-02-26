@@ -3,9 +3,15 @@
 threshold=3
 count=1
 
+<<<<<<< HEAD
 #monitor the /var/log/security file for any failed authentication errors
 grep -i "authentication failure" /var/log/secure | awk '{ print $13 }' | cut -b7-  | sort | uniq -c
 #grep 'Failed password' /var/log/secure* | grep sshd | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | sort | uniq -c
+=======
+#monitor the /var/log/security file for any failed authentication errors, one or the other
+grep "authentication failure" /var/log/secure | awk '{ print $13 }' | cut -b7-  | sort | uniq -c
+grep 'Failed password' /var/log/secure* | grep sshd | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | sort |
+>>>>>>> 5928c82a3879f9724820122601a447846de416fd
 
 
 
