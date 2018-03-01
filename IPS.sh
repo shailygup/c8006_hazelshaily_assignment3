@@ -16,9 +16,8 @@ for IP in $loggedIPs
 do
 	iptables -A INPUT -s $IP -j DROP
 	iptables -A OUTPUT -d $IP -j DROP
-    #The time limit for blocking the IP. The default setting will be block indefinitely. 
-    echo "iptables -D INPUT -s $IP -j DROP" | at now + $timeLimit
-    echo "iptables -D OUTPUT -d $IP -j DROP" | at now + $timeLimit
+	echo "iptables -D INPUT -s $IP -j DROP" | at now + $timeLimit
+	echo "iptables -D OUTPUT -d $IP -j DROP" | at now + $timeLimit
 done
 
 
