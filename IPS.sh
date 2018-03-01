@@ -7,7 +7,7 @@ read threshold
 # echo 'Please specify a time limit:'
 # read timeLimit
 
-file=`tail -f /var/log/secure`
+# file=`tail -f /var/log/secure`
 filetolog=/var/log/secure
 
 #finds the IP of location failed ssh attempts and prints the number of failed attempts
