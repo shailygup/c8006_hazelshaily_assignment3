@@ -13,6 +13,7 @@ filetolog=/var/log/secure
 #finds the IP of location failed ssh attempts and prints the number of failed attempts
 loggedIPs=`grep -i 'Failed password'  $filetolog | grep sshd | awk '{print $11}' | sort | uniq -c | awk -v count=$threshold '{if ($1 >= count) {print $2}}'`
 
+#loop through the IPs found with failed attempts and blocks at firewall and sets crontab job to expire rule after set amount of time
 for IP in $loggedIPs
 do
     iptables -A INPUT -s $IP -j DROP
