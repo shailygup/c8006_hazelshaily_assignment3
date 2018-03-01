@@ -14,15 +14,12 @@ loggedIPs=`grep -i 'Failed password'  $filetolog | grep sshd | awk '{print $11}'
 #loop through the IPs found with failed attempts and blocks at firewall and sets crontab job to expire rule after set amount of time
 for IP in $loggedIPs
 do
+	iptables -A INPUT -s $IP -j DROP
+	iptables -A OUTPUT -d $IP -j DROP
     if [ -n "$timeLimit" ] then
-    	iptables -A INPUT -s $IP -j DROP
-    	iptables -A OUTPUT -d $IP -j DROP
     	#The time limit for blocking the IP. The default setting will be block indefinitely. 
     	echo "iptables -D INPUT -s $IP -j DROP" | at now + $timeLimit
     	echo "iptables -D OUTPUT -d $IP -j DROP" | at now + $timeLimit
-    else
-    	iptables -A INPUT -s $IP -j DROP
-    	iptables -A OUTPUT -d $IP -j DROP
     fi
 done
 
