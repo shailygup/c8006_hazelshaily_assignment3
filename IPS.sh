@@ -8,9 +8,10 @@ read threshold
 # read timeLimit
 
 file=`tail -f /var/log/secure`
+filetolog=/var/log/secure
 
 #finds the IP of location failed ssh attempts and prints the number of failed attempts
-loggedIPs=`grep -i 'Failed password'  $file | grep sshd | awk '{print $11}' | sort | uniq -c | awk -v count=$threshold '{if ($1 >= count) {print $2}}'`
+loggedIPs=`grep -i 'Failed password'  $filetolog | grep sshd | awk '{print $11}' | sort | uniq -c | awk -v count=$threshold '{if ($1 >= count) {print $2}}'`
 
 for IP in $loggedIPs
 do
