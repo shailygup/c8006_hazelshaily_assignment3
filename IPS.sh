@@ -2,9 +2,10 @@
 #!/bin/bash
 
 
-touch logIP.txt
+echo Please specify a file to be logged:
+read fileName
 #finds the IP of location failed ssh attempts and prints the number of failed attempts
-loggedIPs=`grep -i 'Failed password'  /var/log/secure* | grep sshd | awk '{print $11}' | sort | uniq -c | awk -v count=3 '{if ($1 >= count) {print $2}}'`
+loggedIPs=`grep -i 'Failed password'  $fileName | grep sshd | awk '{print $11}' | sort | uniq -c | awk -v count=3 '{if ($1 >= count) {print $2}}'`
 
 for IP in $loggedIPs
 do
@@ -12,7 +13,7 @@ do
     iptables -A OUTPUT -d $IP -j DROP
 done
 
-    
+
 
 #----thought----#
 #since the above cmd is able to count the number of failed attempts, we can make a loop that says if >=3 attempts, then block the ip
