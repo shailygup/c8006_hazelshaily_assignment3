@@ -1,5 +1,5 @@
 
-#!/bin/bash
+#!/bin/sh
 
 
 echo Please specify the threshold:
@@ -17,6 +17,8 @@ for IP in $loggedIPs
 do
     iptables -A INPUT -s $IP -j DROP
     iptables -A OUTPUT -d $IP -j DROP
+    echo "iptables -D INPUT -s $IP -j DROP" | at now + 1 minutes
+    echo "iptables -D OUTPUT -d $IP -j DROP" | at now + 1 minutes
 done
 
 
