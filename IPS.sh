@@ -18,6 +18,9 @@ read threshold
 echo 'Please specify a time limit (ex 1 minutes) or "n" for default:'
 read timeLimit
 
+#flush the table
+iptables -F
+
 #tail the secure log in the background and keep updating the secure.x
 filetolog=/var/log/secure
 #finds the IP users who have attempted a failed login higher than the threshold specified
@@ -31,8 +34,6 @@ while inotifywait -e modify $filetolog; do
 
 		#testing for how the IPs are displayed
 		# echo $IP >> Bad.txt
-		#flush the table
-		iptables -F
 		iptables -A INPUT -s $IP -j DROP
 		iptables -A OUTPUT -d $IP -j DROP
 		if ["$timeLimit" != 'n']; then
