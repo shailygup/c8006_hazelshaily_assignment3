@@ -34,11 +34,11 @@ while inotifywait -e modify $filetolog; do
 
 		#testing for how the IPs are displayed
 		# echo $IP >> Bad.txt
-		iptables -A INPUT -s $IP -j DROP
-		iptables -A OUTPUT -d $IP -j DROP
-		if ["$timeLimit" != 'n']; then
+		# iptables -A INPUT -s $IP -j DROP
+		# iptables -A OUTPUT -d $IP -j DROP
+		# if ["$timeLimit" != 'n']; then
 			echo "iptables -D INPUT -s $IP -j DROP" | at now + $timeLimit
 			echo "iptables -D OUTPUT -d $IP -j DROP" | at now + $timeLimit
-		fi
+		# fi
 	done
 done
