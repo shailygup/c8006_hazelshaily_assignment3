@@ -39,12 +39,12 @@ while inotifywait -e modify $filetolog; do
 
 		#testing for how the IPs are displayed
 		# echo $IP >> Bad.txt
-		# if ["$timeLimit" != 'n' -a "$metric" != 'n']; then
+		if ["$timeLimit" != 'n' -a "$metric" != 'n']; then
 			echo "iptables -D INPUT -s $IP -j DROP" | at now + $timeLimit $metric
 			echo "iptables -D OUTPUT -d $IP -j DROP" | at now + $timeLimit $metric
-		# else
-			# iptables -A INPUT -s $IP -j DROP
-			# iptables -A OUTPUT -d $IP -j DROP
-		# fi
+		else
+			iptables -A INPUT -s $IP -j DROP
+			iptables -A OUTPUT -d $IP -j DROP
+		fi
 	done
 done
