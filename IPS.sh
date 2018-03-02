@@ -4,19 +4,24 @@
 clear
 echo ' '
 echo ' -------------------------------------------------------------------- '
-echo 'Downloading inotify-tools for monitoring the file...'
+echo 'Installing Dependencies...'
 echo ' '
 dnf install inotify-tools -y
 echo ' '
-echo ' Download Completed '
+dnf install at -y
+sudo atd
+echo ' '
+echo ' Install Completed '
 echo ' -------------------------------------------------------------------- '
 echo ' '
 
 #User Input Section
 echo 'Please specify the threshold:'
 read threshold
-echo 'Please specify a time limit (ex 1 minutes) or "n" for default:'
+echo 'Please specify a time limit  (ex 1 or 2) or "n" for default:'
 read timeLimit
+echo 'Please specify a time metric (ex minute or hours) or "n" for default:'
+read metric
 
 #flush the table
 iptables -F
@@ -34,11 +39,12 @@ while inotifywait -e modify $filetolog; do
 
 		#testing for how the IPs are displayed
 		# echo $IP >> Bad.txt
-		# iptables -A INPUT -s $IP -j DROP
-		# iptables -A OUTPUT -d $IP -j DROP
-		# if ["$timeLimit" != 'n']; then
-			echo "iptables -D INPUT -s $IP -j DROP" | at now + $timeLimit
-			echo "iptables -D OUTPUT -d $IP -j DROP" | at now + $timeLimit
+		# if ["$timeLimit" != 'n' -a "$metric" != 'n']; then
+			echo "iptables -D INPUT -s $IP -j DROP" | at now + $timeLimit $metric
+			echo "iptables -D OUTPUT -d $IP -j DROP" | at now + $timeLimit $metric
+		# else
+			# iptables -A INPUT -s $IP -j DROP
+			# iptables -A OUTPUT -d $IP -j DROP
 		# fi
 	done
 done
