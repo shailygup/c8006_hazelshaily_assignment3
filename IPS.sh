@@ -1,12 +1,17 @@
 #!/bin/sh
 
 #download inotidy-tools to download in the background
+echo 'Downloading inotify-tools for monitoring the file...'
 dnf install inotify-tools -y
+echo ' '
+echo ' Download Completed '
+echo ' -------------------------------------------------------------------- '
+echo ' '
 
 #User Input Section
-echo Please specify the threshold:
+echo 'Please specify the threshold:'
 read threshold
-echo 'Please specify a time limit (ex 1 minutes):'
+echo 'Please specify a time limit (ex 1 minutes) or "n" for default:'
 read timeLimit
 
 #tail the secure log in the background and keep updating the secure.x
@@ -26,7 +31,7 @@ while inotifywait -e modify $filetolog; do
 		iptables -F
 		iptables -A INPUT -s $IP -j DROP
 		iptables -A OUTPUT -d $IP -j DROP
-		if [["$timeLimit" != none]]; then
+		if ["$timeLimit" != 'n']; then
 			echo "iptables -D INPUT -s $IP -j DROP" | at now + $timeLimit
 			echo "iptables -D OUTPUT -d $IP -j DROP" | at now + $timeLimit
 		fi
