@@ -20,13 +20,13 @@ while inotifywait -e modify $filetolog; do
 	for IP in $(echo $loggedIPs | tr ',' '\n')
 	do
 		echo $IP >> Bad.txt
-		# iptables -F
-		# iptables -A INPUT -s $IP -j DROP
-		# iptables -A OUTPUT -d $IP -j DROP
-		# if [["$timeLimit" != none]] then
-		# 	echo "iptables -D INPUT -s $IP -j DROP" | at now + $timeLimit
-		# 	echo "iptables -D OUTPUT -d $IP -j DROP" | at now + $timeLimit
-		# fi
+		iptables -F
+		iptables -A INPUT -s $IP -j DROP
+		iptables -A OUTPUT -d $IP -j DROP
+		if [["$timeLimit" != none]] then
+			echo "iptables -D INPUT -s $IP -j DROP" | at now + $timeLimit
+			echo "iptables -D OUTPUT -d $IP -j DROP" | at now + $timeLimit
+		fi
 	done
 done
 
