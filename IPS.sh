@@ -12,7 +12,7 @@ read timeLimit
 #tail the secure log in the background and keep updating the secure.x
 filetolog=/var/log/secure
 #finds the IP of location failed ssh attempts and prints the number of failed attempts
-loggedIPs=$(grep -i 'Failed password'  $filetolog | grep sshd | awk '{print $11}' | sort | uniq -c | awk -v count=$threshold '{if ($1 >= count) {print $2}}'
+loggedIPs=$(grep -i 'Failed password'  $filetolog | grep sshd | awk '{print $11}' | sort | uniq -c | awk -v count=$threshold '{if ($1 >= count) {print $2}}')
 
 #use inotifywait to monitor the secure log file to check for any new updates in the file
 while inotifywait -e modify $filetolog; do
