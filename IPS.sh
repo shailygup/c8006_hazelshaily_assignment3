@@ -1,7 +1,11 @@
 #!/bin/sh
 
 #download inotidy-tools to download in the background
+clear
+echo ' '
+echo ' -------------------------------------------------------------------- '
 echo 'Downloading inotify-tools for monitoring the file...'
+echo ' '
 dnf install inotify-tools -y
 echo ' '
 echo ' Download Completed '
