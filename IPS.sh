@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #download inotidy-tools to download in the background
-dnf install inotify-tools -y &
+dnf install inotify-tools -y
 
 #User Input Section
 echo Please specify the threshold:
