@@ -8,9 +8,6 @@ clear
 echo ' '
 echo ' -------------------------------------------------------------------- '
 echo 'Installing Dependencies...'
-echo ' '
-dnf install inotify-tools -y
-echo ' '
 dnf install at -y
 sudo atd
 echo ' '
@@ -24,7 +21,7 @@ threshold=3
 # echo 'Please specify a time limit  (ex 1 or 2) or "n" for default:'
 timeLimit=1
 # echo 'Please specify a time metric (ex minute or hours) or "n" for default:'
-metric=minutes
+# metric=minutes
 
 #flush the table
 iptables -F
@@ -33,22 +30,35 @@ iptables -X
 #tail the secure log in the background and keep updating the secure.x
 filetolog=/var/log/secure
 #finds the IP users who have attempted a failed login higher than the threshold specified
-loggedIPs=$(grep 'Failed password' $filetolog | grep sshd | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | sort | uniq -c | awk -v count="$threshold" '{if ($1 >= count) {print $2}}')
+# loggedIPs=$(grep 'Failed password' $filetolog | grep sshd | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | sort | uniq -c | awk -v count="$threshold" '{if ($1 >= count) {print $2}}')
+
+#if no time limit set, block the IP forever
+if [ -z $timeLimit ]; then
+	$timeLimit = inifinity
+fi
+
+function timeLimitfun {
+		(sleep $timeLimit
+		iptables -D INPUT -s $IP -j DROP)
+}
 
 #use inotifywait to monitor the secure log file to check for any new updates in the file
-while inotifywait -e modify $filetolog; do
+tail -f $filetolog | while read l
+do
 	#loop through the IPs found with failed attempts and blocks at firewall and sets crontab job to expire rule after set amount of time
-	for IP in $(echo "$loggedIPs" | tr ',' '\n')
-	do
 
+	loggedIPs=$(grep 'Failed password' $filetolog | grep sshd | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | sort | uniq -c | awk -v count="$threshold" '{if ($1 >= count) {print $2}}')
+	echo loggedIPs
 		#testing for how the IPs are displayed
 		# echo $IP >> Bad.txt
-		iptables -A INPUT -s "$IP" -j DROP
-		iptables -A OUTPUT -d "$IP" -j DROP
+		# iptables -A INPUT -s "$IP" -j DROP
+		# iptables -A OUTPUT -d "$IP" -j DROP
 
-		if [ "$metric" != 'n' ]; then
-			echo "iptables -D INPUT -s $IP -j DROP" | at now + "$timeLimit" "$metric"
-			echo "iptables -D OUTPUT -d $IP -j DROP" | at now + "$timeLimit" "$metric"
+
+		if [ ! -z $loggedIPs ]; then
+					iptables -A INPUT -s $loggedIPs -j DROP
+					echo " IP Block being established"
+					timeLimitfun
 		fi
 		# sleep 1
 	done
