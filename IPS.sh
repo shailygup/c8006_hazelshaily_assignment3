@@ -1,4 +1,7 @@
 #!/bin/sh
+# ln -s ~/c8006_hazelshaily_assignment3/IPS.sh /usr/local/bin
+#Cron tab addition
+#echo 20 10 * * * root ~/c8006_hazelshaily_assignment3/IPS.sh >> /etc/crontab
 
 #download inotidy-tools to download in the background
 clear
@@ -16,12 +19,12 @@ echo ' -------------------------------------------------------------------- '
 echo ' '
 
 #User Input Section
-echo 'Please specify the threshold:'
-read -r threshold
-echo 'Please specify a time limit  (ex 1 or 2) or "n" for default:'
-read -r timeLimit
-echo 'Please specify a time metric (ex minute or hours) or "n" for default:'
-read -r metric
+# echo 'Please specify the threshold:'
+threshold=3
+# echo 'Please specify a time limit  (ex 1 or 2) or "n" for default:'
+timeLimit=1
+# echo 'Please specify a time metric (ex minute or hours) or "n" for default:'
+metric=minutes
 
 #flush the table
 iptables -F
