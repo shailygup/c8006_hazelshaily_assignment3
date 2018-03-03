@@ -28,6 +28,7 @@ metric=minutes
 
 #flush the table
 iptables -F
+iptables -X
 
 #tail the secure log in the background and keep updating the secure.x
 filetolog=/var/log/secure
@@ -49,5 +50,6 @@ while inotifywait -e modify $filetolog; do
 			echo "iptables -D INPUT -s $IP -j DROP" | at now + "$timeLimit" "$metric"
 			echo "iptables -D OUTPUT -d $IP -j DROP" | at now + "$timeLimit" "$metric"
 		fi
-		sleep 1
+		# sleep 1
 	done
+done
