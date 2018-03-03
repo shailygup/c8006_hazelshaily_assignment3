@@ -41,9 +41,11 @@ while inotifywait -e modify $filetolog; do
 		# echo $IP >> Bad.txt
 		iptables -A INPUT -s $IP -j DROP
 		iptables -A OUTPUT -d $IP -j DROP
-		if [ $timeLimit != 'n' -a $metric != 'n' ]; then
+
+		if [ $metric != 'n' ]; then
 			echo "iptables -D INPUT -s $IP -j DROP" | at now + $timeLimit $metric
 			echo "iptables -D OUTPUT -d $IP -j DROP" | at now + $timeLimit $metric
 		fi
+		sleep 1
 	done
 done
